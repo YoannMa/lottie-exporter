@@ -9,8 +9,8 @@ export const defaultArgs = {
     input  : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),
     width  : cmd.option({ type : cmd.optional(cmd.number), long : 'width', description : 'Width of the output, if not specified, the width of the lottie file will be used' }),
     height : cmd.option({ type : cmd.optional(cmd.number), long : 'height', description : 'Height of the output, if not specified, the height of the lottie file will be used' }),
-    fps    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-fps', description : 'Max FPS of the output, integer (default: 60)' })
-    // speed  : cmd.option({ type : cmd.optional(cmd.number), long : 'speed', description : 'Speed of the animation (default: 1)' })
+    fps    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-fps', description : 'Max FPS of the output, integer (default: 60)' }),
+    speed  : cmd.option({ type : cmd.optional(cmd.number), long : 'speed', description : 'Speed of the animation (default: 1)' })
 } as const;
 
 export type SupportedFrameType = 'png' | 'jpeg' | 'webp' | 'avif';
@@ -32,11 +32,18 @@ export class LottieFile {
     lottie : DotLottie;
     fps : number;
 
-    private constructor(lottie : DotLottie, canvas : Canvas, fps : number) {
+    private constructor(lottie : DotLottie, canvas : Canvas, maxFPS : number = 60) {
 
         this.canvas = canvas;
         this.lottie = lottie;
-        this.fps    = fps;
+
+        this.fps = this.animationFps;
+
+        if (this.fps > maxFPS) {
+
+            ora().warn(`Lottie file has higher framerate (${ this.fps }) than the maximum value (${ maxFPS }), frames will be dropped, you can increase the maximum FPS with the --max-fps options`);
+            this.fps = maxFPS;
+        }
     }
 
     static async import(file : string | ArrayBuffer | Record<string, unknown>, opt? : Opts) {
@@ -60,16 +67,7 @@ export class LottieFile {
 
         await new Promise((resolve) => lottie.addEventListener('load', resolve));
 
-        let fps = lottie.totalFrames / lottie.duration;
-
-        if (fps > (opt?.fps ?? 60)) {
-
-            ora()
-                .warn(`Lottie file has higher framerate (${ fps }) than the maximum value allowed (${ opt?.fps ?? 60 }), some frames will be dropped, you can increase the maximum FPS with the --max-fps options`);
-            fps = opt?.fps ?? 60;
-        }
-
-        const lottieFile = new LottieFile(lottie, canvas, fps);
+        const lottieFile = new LottieFile(lottie, canvas, opt?.fps);
 
         if (!opt?.width && !opt?.height) {
 
@@ -90,12 +88,17 @@ export class LottieFile {
 
     get duration() {
 
-        return this.lottie.duration;
+        return this.lottie.duration / this.lottie.speed;
     }
 
     get totalFrames() {
 
         return this.lottie.totalFrames;
+    }
+
+    get animationFps() {
+
+        return this.totalFrames / this.duration;
     }
 
     get width() {
@@ -163,11 +166,9 @@ export class LottieFile {
 
         let increment = 1;
 
-        const fileFPS = this.totalFrames / this.duration;
+        if (this.animationFps > this.fps) {
 
-        if (fileFPS > this.fps) {
-
-            increment = fileFPS / this.fps;
+            increment = this.animationFps / this.fps;
         }
 
         const spinner = ora('Processing frames...').start();
