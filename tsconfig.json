@@ -1,0 +1,29 @@
+{
+  "include": ["lib/*"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "lib",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "declaration": true,
+    "outDir": "dist",
+    "types": ["node"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "lib": ["es2022"]
+  }
+}
