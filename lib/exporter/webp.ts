@@ -69,7 +69,7 @@ export const command = cmd.command({
     args    : {
         ...defaultArgs,
         output         : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the WebP to.' }),
-        repeat         : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation (0 = infinite) (default: 0)' }),
+        repeat         : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
         optimize       : cmd.flag({ long : 'optimize', description : 'Enabled WebP optimization (slow)' }),
         quality        : cmd.option({ type : cmd.optional(cmd.number), long : 'quality', description : 'Quality, integer (1-100) (default: 80)' }),
         alphaQuality   : cmd.option({ type : cmd.optional(cmd.number), long : 'alpha-quality', description : 'quality of alpha layer, integer (0-100) (default: 100)' }),

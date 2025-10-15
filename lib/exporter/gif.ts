@@ -61,11 +61,11 @@ export const command = cmd.command({
     args    : {
         ...defaultArgs,
         output   : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the GIF to.' }),
-        repeat   : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation (0 = infinite) (default: 0)' }),
+        repeat   : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
         optimize : cmd.flag({ long : 'optimize', description : 'Enabled GIF optimization (slow)' }),
         colors   : cmd.option({ type : cmd.optional(cmd.number), long : 'colors', description : 'Maximum number of palette entries, including transparency, integer (2-256) (default: 256)' }),
         effort   : cmd.option({ type : cmd.optional(cmd.number), long : 'effort', description : 'CPU effort, integer (0-10) (default: 7) (0 = fastest, 10 = slowest)' }),
-        dither   : cmd.option({ type : cmd.optional(cmd.number), long : 'dither', description : 'Level of Floyd-Steinberg error diffusion, float (0-1) (default: 1.0)' })
+        dither   : cmd.option({ type : cmd.optional(cmd.number), long : 'dither', description : 'Level of Floyd-Steinberg error diffusion, float (0~1) (default: 1.0)' })
     },
     handler : async (args) => {
 

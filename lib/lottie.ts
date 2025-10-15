@@ -6,7 +6,7 @@ import * as cmd                                       from 'cmd-ts';
 import ora                                            from 'ora';
 
 export const defaultArgs = {
-    input  : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : '.lottie or .json input file' }),
+    input  : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),
     width  : cmd.option({ type : cmd.optional(cmd.number), long : 'width', description : 'Width of the output, if not specified, the width of the lottie file will be used' }),
     height : cmd.option({ type : cmd.optional(cmd.number), long : 'height', description : 'Height of the output, if not specified, the height of the lottie file will be used' }),
     fps    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-fps', description : 'Max FPS of the output, integer (default: 60)' })
