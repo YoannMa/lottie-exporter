@@ -9,6 +9,8 @@ import sharp from 'sharp';
 
 import { LottieFile, defaultArgs } from '../lottie';
 
+const Preset = ['default', 'photo', 'picture', 'drawing', 'text'] as const;
+
 interface ConvertOpt {
     repeat? : number;
     optimize? : boolean;
@@ -18,7 +20,7 @@ interface ConvertOpt {
     nearLossless? : boolean;
     smartSubsample? : boolean;
     smartDeblock? : boolean;
-    preset? : 'default' | 'photo' | 'picture' | 'drawing' | 'text';
+    preset? : typeof Preset[number];
     effort? : number;
 }
 
@@ -54,7 +56,7 @@ export const webp = async (lottie : LottieFile, output : string, opt? : ConvertO
                 smartSubsample : opt.smartSubsample,
                 smartDeblock   : opt.smartDeblock,
                 preset         : opt.preset,
-                effort         : opt.effort
+                effort         : opt.effort ?? 6
             })
             .toBuffer();
 
@@ -77,14 +79,13 @@ export const command = cmd.command({
         nearLossless   : cmd.flag({ long : 'near-lossless', description : 'Use near_lossless compression mode (default: false)' }),
         smartSubsample : cmd.flag({ long : 'smart-subsample', description : 'Use high quality chroma subsampling (default: false)' }),
         smartDeblock   : cmd.flag({ long : 'smart-deblock', description : 'Auto-adjust the deblocking filter, can improve low contrast edges (slow) (default: false)' }),
-        preset         : cmd.option({ type : cmd.optional(cmd.oneOf(['default', 'photo', 'picture', 'drawing', 'text'])), long : 'preset', description : 'Named preset for preprocessing/filtering' }),
+        preset         : cmd.option({ type : cmd.optional(cmd.oneOf(Preset)), long : 'preset', description : 'Named preset for preprocessing/filtering' }),
         effort         : cmd.option({ type : cmd.optional(cmd.number), long : 'effort', description : 'CPU effort, integer (0-6) (default: 6) (0 = fastest, 6 = slowest)' })
     },
     handler : async (args) => {
 
         const lottie = await LottieFile.fromArgs(args);
 
-        // @ts-expect-error
         await webp(lottie, args.output, args);
     }
 });

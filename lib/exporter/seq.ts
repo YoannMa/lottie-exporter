@@ -6,9 +6,9 @@ import db       from 'mime-db';
 
 import { defaultArgs, LottieFile } from '../lottie';
 
-export type ImageType = 'png' | 'jpeg' | 'webp' | 'avif';
+const ImageType = ['png', 'jpeg', 'webp', 'avif'] as const;
 
-export const seq = async (lottie : LottieFile, outputPath : string, type : ImageType) => {
+export const seq = async (lottie : LottieFile, outputPath : string, type : typeof ImageType[number] = 'png') => {
 
     const ext = db[`image/${ type }`]?.extensions?.[0] ?? type;
 
@@ -30,12 +30,12 @@ export const command = cmd.command({
     args    : {
         ...defaultArgs,
         output : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'Folder to output the sequence of images to.' }),
-        type   : cmd.option({ type : cmd.oneOf(['png', 'jpeg', 'webp', 'avif']), long : 'type', short : 't', defaultValue : () => 'png', description : 'Image type' })
+        type   : cmd.option({ type : cmd.optional(cmd.oneOf(ImageType)), long : 'type', short : 't', description : 'Image type (default: png)' })
     },
     handler : async (args) => {
 
         const lottie = await LottieFile.fromArgs(args);
 
-        await seq(lottie, args.output, args.type as ImageType);
+        await seq(lottie, args.output, args.type);
     }
 });
