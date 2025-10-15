@@ -273,11 +273,16 @@ class APNGBuilder {
     }
 }
 
+const DeflateMethod = ['zlib', '7zip', 'zopfli'] as const;
+
 interface ConvertOpt {
     repeat? : number;
     optimize? : boolean;
     minQuality? : number;
     maxQuality? : number;
+    disabledQuant? : boolean;
+    deflateMethod? : typeof DeflateMethod[number];
+    iter? : number;
 }
 
 export const apng = async (lottie : LottieFile, output : string, opt? : ConvertOpt) => {
@@ -301,9 +306,17 @@ export const apng = async (lottie : LottieFile, output : string, opt? : ConvertO
 
         const optimizer = await APNGOptimizer.createOptimizer(import.meta.resolve('apng-optimizer/apng-optimizer.wasm'));
 
+        if (opt?.deflateMethod && DeflateMethod.indexOf(opt.deflateMethod) == -1) {
+
+            throw new Error(`Invalid deflate method: ${ opt.deflateMethod }`);
+        }
+
         const optimized = optimizer.optAPNG(builder.getAPng(), {
+            iter            : opt?.iter ?? 15,
             minQuality      : opt?.minQuality ?? 0,
             maxQuality      : opt?.maxQuality ?? 100,
+            disabledQuant   : opt?.disabledQuant ?? false,
+            deflateMethod   : opt?.deflateMethod ? DeflateMethod.indexOf(opt.deflateMethod) : 1,
             processCallback : (progress : number) => {
 
                 spinner.text = `Optimizing APNG: ${ (progress * 100).toFixed(2) }%`;
@@ -324,11 +337,14 @@ export const command = cmd.command({
     name    : 'apng',
     args    : {
         ...defaultArgs,
-        output     : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the APNG to.' }),
-        repeat     : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
-        optimize   : cmd.flag({ long : 'optimize', defaultValue : () => false, description : 'Optimize the output APNG' }),
-        minQuality : cmd.option({ type : cmd.optional(cmd.number), long : 'min-quality', description : 'Minimum quality for optimization, integer (0-100) (default: 0)' }),
-        maxQuality : cmd.option({ type : cmd.optional(cmd.number), long : 'max-quality', description : 'Maximum quality for optimization, integer (0-100) (default: 100)' })
+        output        : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the APNG to.' }),
+        repeat        : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
+        optimize      : cmd.flag({ long : 'optimize', description : 'Optimize the output APNG (slow) (default: false)' }),
+        iter          : cmd.option({ type : cmd.optional(cmd.number), long : 'iter', description : 'Number of compression iterations (default: 15)' }),
+        minQuality    : cmd.option({ type : cmd.optional(cmd.number), long : 'min-quality', description : 'Minimum quality for optimization, integer (0-100) (default: 0)' }),
+        maxQuality    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-quality', description : 'Maximum quality for optimization, integer (0-100) (default: 100)' }),
+        deflateMethod : cmd.option({ type : cmd.optional(cmd.oneOf(DeflateMethod)), long : 'deflate-method', description : 'Deflate method to use (default: 7zip)' }),
+        disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' })
     },
     handler : async (args) => {
 
