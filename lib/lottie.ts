@@ -12,7 +12,7 @@ export const defaultArgs = {
     input       : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),
     width       : cmd.option({ type : cmd.optional(cmd.number), long : 'width', description : 'Width of the output, if not specified, the width of the lottie file will be used' }),
     height      : cmd.option({ type : cmd.optional(cmd.number), long : 'height', description : 'Height of the output, if not specified, the height of the lottie file will be used' }),
-    background  : cmd.option({ type : cmd.optional(cmd.string), long : 'background', description : 'Background in hex/rgba()/hsla() format (default: none)' }),
+    background  : cmd.option({ type : cmd.optional(cmd.string), long : 'background', description : 'Background in HEX(A) (ex: #FEFEFE0F) format (default: none)' }),
     fps         : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'max-fps', description : 'Max FPS of the output (default: 60)' }),
     speed       : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'speed', description : 'Speed of the animation (default: 1)' }),
     animationId : cmd.option({ type : cmd.optional(cmd.string), long : 'animation-id', description : 'Animation ID (for .lottie files with multiple animations)' }),
