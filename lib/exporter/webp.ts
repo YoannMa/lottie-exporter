@@ -7,7 +7,8 @@ import ora      from 'ora';
 import WebP  from 'node-webpmux';
 import sharp from 'sharp';
 
-import { LottieFile, defaultArgs } from '../lottie';
+import { LottieFile, defaultArgs }            from '../lottie';
+import { outputFile, integer, repeat, range } from '../utils';
 
 const Preset = ['default', 'photo', 'picture', 'drawing', 'text'] as const;
 
@@ -69,18 +70,33 @@ export const webp = async (lottie : LottieFile, output : string, opt? : ConvertO
 export const command = cmd.command({
     name    : 'webp',
     args    : {
-        ...defaultArgs,
-        output         : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the WebP to.' }),
-        repeat         : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
+        ...defaultArgs, repeat,
+        output         : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the WebP to.' }),
         optimize       : cmd.flag({ long : 'optimize', description : 'Enabled WebP optimization (slow)' }),
-        quality        : cmd.option({ type : cmd.optional(cmd.number), long : 'quality', description : 'Quality, integer (1-100) (default: 80)' }),
-        alphaQuality   : cmd.option({ type : cmd.optional(cmd.number), long : 'alpha-quality', description : 'quality of alpha layer, integer (0-100) (default: 100)' }),
         lossless       : cmd.flag({ long : 'lossless', description : 'Use lossless compression mode (default: false)' }),
         nearLossless   : cmd.flag({ long : 'near-lossless', description : 'Use near_lossless compression mode (default: false)' }),
         smartSubsample : cmd.flag({ long : 'smart-subsample', description : 'Use high quality chroma subsampling (default: false)' }),
         smartDeblock   : cmd.flag({ long : 'smart-deblock', description : 'Auto-adjust the deblocking filter, can improve low contrast edges (slow) (default: false)' }),
-        preset         : cmd.option({ type : cmd.optional(cmd.oneOf(Preset)), long : 'preset', description : 'Named preset for preprocessing/filtering' }),
-        effort         : cmd.option({ type : cmd.optional(cmd.number), long : 'effort', description : 'CPU effort, integer (0-6) (default: 6) (0 = fastest, 6 = slowest)' })
+        quality        : cmd.option({
+            long        : 'quality',
+            description : 'Quality, integer (1-100) (default: 80)',
+            type        : cmd.optional(range(integer, { min : 1, max : 100 }))
+        }),
+        alphaQuality   : cmd.option({
+            long        : 'alpha-quality',
+            description : 'quality of alpha layer, integer (0-100) (default: 100)',
+            type        : cmd.optional(range(integer, { min : 0, max : 100 }))
+        }),
+        preset         : cmd.option({
+            long        : 'preset',
+            description : 'Named preset for preprocessing/filtering',
+            type        : cmd.optional(cmd.oneOf(Preset))
+        }),
+        effort         : cmd.option({
+            long        : 'effort',
+            description : 'CPU effort, integer (0-6) (default: 6) (0 = fastest, 6 = slowest)',
+            type        : cmd.optional(range(integer, { min : 0, max : 6 }))
+        })
     },
     handler : async (args) => {
 

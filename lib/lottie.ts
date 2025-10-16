@@ -1,21 +1,30 @@
-import FsP from 'node:fs/promises';
+import FsP     from 'node:fs/promises';
+import { EOL } from 'node:os';
 
 import { DotLottie }                                  from '@lottiefiles/dotlottie-web';
 import { createCanvas, type Canvas, type AvifConfig } from '@napi-rs/canvas';
 import * as cmd                                       from 'cmd-ts';
 import ora                                            from 'ora';
 
+import { range, roundToDecimal } from './utils';
+
 export const defaultArgs = {
-    input  : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),
-    width  : cmd.option({ type : cmd.optional(cmd.number), long : 'width', description : 'Width of the output, if not specified, the width of the lottie file will be used' }),
-    height : cmd.option({ type : cmd.optional(cmd.number), long : 'height', description : 'Height of the output, if not specified, the height of the lottie file will be used' }),
-    fps    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-fps', description : 'Max FPS of the output, integer (default: 60)' }),
-    speed  : cmd.option({ type : cmd.optional(cmd.number), long : 'speed', description : 'Speed of the animation (default: 1)' })
+    input       : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),
+    width       : cmd.option({ type : cmd.optional(cmd.number), long : 'width', description : 'Width of the output, if not specified, the width of the lottie file will be used' }),
+    height      : cmd.option({ type : cmd.optional(cmd.number), long : 'height', description : 'Height of the output, if not specified, the height of the lottie file will be used' }),
+    background  : cmd.option({ type : cmd.optional(cmd.string), long : 'background', description : 'Background in hex/rgba()/hsla() format (default: none)' }),
+    fps         : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'max-fps', description : 'Max FPS of the output (default: 60)' }),
+    speed       : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'speed', description : 'Speed of the animation (default: 1)' }),
+    animationId : cmd.option({ type : cmd.optional(cmd.string), long : 'animation-id', description : 'Animation ID (for .lottie files with multiple animations)' }),
+    themeId     : cmd.option({ type : cmd.optional(cmd.string), long : 'theme-id', description : 'Theme ID to apply' })
 } as const;
 
 export type SupportedFrameType = 'png' | 'jpeg' | 'webp' | 'avif';
 
 interface Opts {
+    background? : string;
+    animationId? : string;
+    themeId? : string;
     width? : number;
     height? : number;
     speed? : number;
@@ -41,7 +50,12 @@ export class LottieFile {
 
         if (this.fps > maxFPS) {
 
-            ora().warn(`Lottie file has higher framerate (${ this.fps }) than the maximum value (${ maxFPS }), frames will be dropped, you can increase the maximum FPS with the --max-fps options`);
+            ora().warn([
+                `Lottie file has higher framerate (${ roundToDecimal(this.fps, 2) }) than the maximum value (${ maxFPS })`,
+                `  ~${ roundToDecimal((1 - maxFPS / this.fps) * 100, 2) }% of original frames will be dropped to target ${ maxFPS } FPS`,
+                `  You can increase the maximum FPS with the --max-fps options`
+            ].join(EOL));
+
             this.fps = maxFPS;
         }
     }
@@ -59,6 +73,9 @@ export class LottieFile {
 
         const lottie = new DotLottie({
             useFrameInterpolation : false,
+            backgroundColor       : opt?.background,
+            animationId           : opt?.animationId,
+            themeId               : opt?.themeId,
             autoplay              : false,
             canvas                : canvas,
             speed                 : opt?.speed ?? 1,

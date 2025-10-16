@@ -6,7 +6,8 @@ import ora      from 'ora';
 // @ts-expect-error
 import { APNGOptimizer } from 'apng-optimizer';
 
-import { LottieFile, defaultArgs } from '../lottie';
+import { LottieFile, defaultArgs }            from '../lottie';
+import { outputFile, integer, range, repeat } from '../utils';
 
 /* *
  *  APNGBuilder
@@ -336,15 +337,30 @@ export const apng = async (lottie : LottieFile, output : string, opt? : ConvertO
 export const command = cmd.command({
     name    : 'apng',
     args    : {
-        ...defaultArgs,
-        output        : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'File to output the APNG to.' }),
-        repeat        : cmd.option({ type : cmd.optional(cmd.number), long : 'repeat', description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)' }),
+        ...defaultArgs, repeat,
+        output        : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the APNG to.' }),
         optimize      : cmd.flag({ long : 'optimize', description : 'Optimize the output APNG (slow) (default: false)' }),
-        iter          : cmd.option({ type : cmd.optional(cmd.number), long : 'iter', description : 'Number of compression iterations (default: 15)' }),
-        minQuality    : cmd.option({ type : cmd.optional(cmd.number), long : 'min-quality', description : 'Minimum quality for optimization, integer (0-100) (default: 0)' }),
-        maxQuality    : cmd.option({ type : cmd.optional(cmd.number), long : 'max-quality', description : 'Maximum quality for optimization, integer (0-100) (default: 100)' }),
-        deflateMethod : cmd.option({ type : cmd.optional(cmd.oneOf(DeflateMethod)), long : 'deflate-method', description : 'Deflate method to use (default: 7zip)' }),
-        disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' })
+        disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' }),
+        iter          : cmd.option({
+            long        : 'iter',
+            description : 'Number of compression iterations, integer (default: 15)',
+            type        : cmd.optional(range(integer, { min : 1 }))
+        }),
+        minQuality    : cmd.option({
+            long        : 'min-quality',
+            description : 'Minimum quality for optimization, integer (0-100) (default: 0)',
+            type        : cmd.optional(range(integer, { min : 0, max : 100 }))
+        }),
+        maxQuality    : cmd.option({
+            long        : 'max-quality',
+            description : 'Maximum quality for optimization, integer (0-100) (default: 100)',
+            type        : cmd.optional(range(integer, { min : 0, max : 100 }))
+        }),
+        deflateMethod : cmd.option({
+            long        : 'deflate-method',
+            description : 'Deflate method to use (default: 7zip)',
+            type        : cmd.optional(cmd.oneOf(DeflateMethod))
+        })
     },
     handler : async (args) => {
 

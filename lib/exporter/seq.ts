@@ -5,6 +5,7 @@ import * as cmd from 'cmd-ts';
 import db       from 'mime-db';
 
 import { defaultArgs, LottieFile } from '../lottie';
+import { outputFile }              from '../utils';
 
 const ImageType = ['png', 'jpeg', 'webp', 'avif'] as const;
 
@@ -29,8 +30,12 @@ export const command = cmd.command({
     name    : 'seq',
     args    : {
         ...defaultArgs,
-        output : cmd.option({ type : cmd.string, long : 'output', short : 'o', description : 'Folder to output the sequence of images to.' }),
-        type   : cmd.option({ type : cmd.optional(cmd.oneOf(ImageType)), long : 'type', short : 't', description : 'Image type (default: png)' })
+        output : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'Folder to output the sequence of images to.' }),
+        type   : cmd.option({
+            long        : 'type',
+            description : 'Image type (default: png)',
+            type        : cmd.optional(cmd.oneOf(ImageType))
+        })
     },
     handler : async (args) => {
 
