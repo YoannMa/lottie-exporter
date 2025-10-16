@@ -30,7 +30,7 @@ export const command = cmd.command({
     name    : 'seq',
     args    : {
         ...defaultArgs,
-        output : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'Folder to output the sequence of images to.' }),
+        output : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'Folder to output the sequence of images to' }),
         type   : cmd.option({
             long        : 'type',
             description : 'Image type (default: png)',

@@ -61,7 +61,7 @@ export const command = cmd.command({
     name    : 'gif',
     args    : {
         ...defaultArgs, repeat,
-        output   : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the GIF to.' }),
+        output   : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the GIF to' }),
         optimize : cmd.flag({ long : 'optimize', description : 'Enabled GIF optimization (slow)' }),
         colors   : cmd.option({
             long        : 'colors',

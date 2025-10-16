@@ -338,7 +338,7 @@ export const command = cmd.command({
     name    : 'apng',
     args    : {
         ...defaultArgs, repeat,
-        output        : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the APNG to.' }),
+        output        : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the APNG to' }),
         optimize      : cmd.flag({ long : 'optimize', description : 'Optimize the output APNG (slow) (default: false)' }),
         disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' }),
         iter          : cmd.option({

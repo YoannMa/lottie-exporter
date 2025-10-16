@@ -71,7 +71,7 @@ export const command = cmd.command({
     name    : 'webp',
     args    : {
         ...defaultArgs, repeat,
-        output         : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the WebP to.' }),
+        output         : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the WebP to' }),
         optimize       : cmd.flag({ long : 'optimize', description : 'Enabled WebP optimization (slow)' }),
         lossless       : cmd.flag({ long : 'lossless', description : 'Use lossless compression mode (default: false)' }),
         nearLossless   : cmd.flag({ long : 'near-lossless', description : 'Use near_lossless compression mode (default: false)' }),
