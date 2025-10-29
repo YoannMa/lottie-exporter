@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import { version, name } from '../package.json';
+import pkg from '../package.json' with { type: 'json' };
 
 import { subcommands, run } from 'cmd-ts';
 
-import { command as apng } from './exporter/apng';
-import { command as webp } from './exporter/webp';
-import { command as gif }  from './exporter/gif';
-import { command as seq }  from './exporter/seq';
+import { command as apng } from './exporter/apng.js';
+import { command as webp } from './exporter/webp.js';
+import { command as gif }  from './exporter/gif.js';
+import { command as seq }  from './exporter/seq.js';
 
-run(subcommands({ name, cmds : { seq, apng, webp, gif }, version }), process.argv.slice(2));
+run(subcommands({ name : pkg.name, cmds : { seq, apng, webp, gif }, version : pkg.version }), process.argv.slice(2));

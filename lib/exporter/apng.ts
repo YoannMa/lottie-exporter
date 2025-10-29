@@ -6,8 +6,8 @@ import ora      from 'ora';
 // @ts-expect-error
 import { APNGOptimizer } from 'apng-optimizer';
 
-import { LottieFile, defaultArgs }            from '../lottie';
-import { outputFile, integer, range, repeat } from '../utils';
+import { LottieFile, defaultArgs }            from '../lottie.js';
+import { outputFile, integer, range, repeat } from '../utils.js';
 
 /* *
  *  APNGBuilder

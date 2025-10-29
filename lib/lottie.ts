@@ -6,7 +6,7 @@ import { createCanvas, type Canvas, type AvifConfig } from '@napi-rs/canvas';
 import * as cmd                                       from 'cmd-ts';
 import ora                                            from 'ora';
 
-import { range, roundToDecimal } from './utils';
+import { range, roundToDecimal } from './utils.js';
 
 export const defaultArgs = {
     input       : cmd.option({ type : cmd.string, long : 'input', short : 'i', description : 'Input file (.lottie or .json)' }),

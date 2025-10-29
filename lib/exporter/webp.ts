@@ -7,8 +7,8 @@ import ora      from 'ora';
 import WebP  from 'node-webpmux';
 import sharp from 'sharp';
 
-import { LottieFile, defaultArgs }            from '../lottie';
-import { outputFile, integer, repeat, range } from '../utils';
+import { LottieFile, defaultArgs }            from '../lottie.js';
+import { outputFile, integer, repeat, range } from '../utils.js';
 
 const Preset = ['default', 'photo', 'picture', 'drawing', 'text'] as const;
 

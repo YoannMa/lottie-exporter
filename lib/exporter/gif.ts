@@ -7,8 +7,8 @@ import ora      from 'ora';
 import { GIFEncoder, quantize, applyPalette } from 'gifenc';
 import sharp                                  from 'sharp';
 
-import { defaultArgs, LottieFile }            from '../lottie';
-import { outputFile, integer, range, repeat } from '../utils';
+import { defaultArgs, LottieFile }            from '../lottie.js';
+import { outputFile, integer, range, repeat } from '../utils.js';
 
 interface ExportOpt {
     repeat? : number;

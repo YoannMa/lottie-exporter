@@ -3,8 +3,8 @@ import * as Path from 'node:path';
 
 import * as cmd from 'cmd-ts';
 
-import { defaultArgs, LottieFile } from '../lottie';
-import { outputFile }              from '../utils';
+import { defaultArgs, LottieFile } from '../lottie.js';
+import { outputFile }              from '../utils.js';
 
 const ImageType = ['png', 'jpeg', 'webp', 'avif'] as const;
 
