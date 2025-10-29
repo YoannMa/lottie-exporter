@@ -5,13 +5,13 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "files" : [
-    "dist/**/*",
-    "lib/**/*"
-  ],
   "bin": {
     "lottie-exporter": "./dist/cli.js"
   },
+  "files": [
+    "dist/**/*",
+    "lib/**/*"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "tsc --noEmit"
@@ -27,14 +27,17 @@
     "sharp": "0.34.4"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
     "@types/gif-encoder": "0.7.4",
     "@types/mime-db": "1.43.6",
     "@types/node": "24.9.2",
+    "semantic-release": "25.0.1",
     "typescript": "5.9.3"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access" : "public",
-    "provenance": true
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
   }
 }
