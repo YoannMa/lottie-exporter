@@ -5,7 +5,10 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "files" : [
+    "dist/**/*",
+    "lib/**/*"
+  ],
   "bin": {
     "lottie-exporter": "./dist/cli.js"
   },
@@ -31,6 +34,7 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
+    "access" : "public",
     "provenance": true
   }
 }
