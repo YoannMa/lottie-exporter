@@ -2,16 +2,22 @@ import * as FsP  from 'node:fs/promises';
 import * as Path from 'node:path';
 
 import * as cmd from 'cmd-ts';
-import db       from 'mime-db';
 
 import { defaultArgs, LottieFile } from '../lottie';
 import { outputFile }              from '../utils';
 
 const ImageType = ['png', 'jpeg', 'webp', 'avif'] as const;
 
+const Extensions = {
+    png   : 'png',
+    jpeg  : 'jpg',
+    webp  : 'webp',
+    avif  : 'avif',
+};
+
 export const seq = async (lottie : LottieFile, outputPath : string, type : typeof ImageType[number] = 'png') => {
 
-    const ext = db[`image/${ type }`]?.extensions?.[0] ?? type;
+    const ext = Extensions[type];
 
     await FsP.mkdir(outputPath, { recursive : true });
 

@@ -19,7 +19,6 @@
     "apng-optimizer": "1.2.0",
     "cmd-ts": "0.14.2",
     "gifenc": "1.0.3",
-    "mime-db": "1.54.0",
     "node-webpmux": "3.2.1",
     "ora": "9.0.0",
     "sharp": "0.34.4"
