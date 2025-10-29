@@ -4,8 +4,10 @@ import * as cmd from 'cmd-ts';
 import ora      from 'ora';
 
 // @ts-expect-error
-import { GIFEncoder, quantize, applyPalette } from 'gifenc';
-import sharp                                  from 'sharp';
+import gifenc from 'gifenc';
+import sharp  from 'sharp';
+
+const { GIFEncoder, quantize, applyPalette } = gifenc;
 
 import { defaultArgs, LottieFile }            from '../lottie.js';
 import { outputFile, integer, range, repeat } from '../utils.js';
