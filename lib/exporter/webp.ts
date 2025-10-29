@@ -12,7 +12,7 @@ import { outputFile, integer, repeat, range } from '../utils';
 
 const Preset = ['default', 'photo', 'picture', 'drawing', 'text'] as const;
 
-interface ConvertOpt {
+interface ExportOpt {
     repeat? : number;
     optimize? : boolean;
     quality? : number;
@@ -25,7 +25,7 @@ interface ConvertOpt {
     effort? : number;
 }
 
-export const webp = async (lottie : LottieFile, output : string, opt? : ConvertOpt) => {
+export const webp = async (lottie : LottieFile, output : string, opt? : ExportOpt) => {
 
     await WebP.Image.initLib();
 

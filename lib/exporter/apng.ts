@@ -276,7 +276,7 @@ class APNGBuilder {
 
 const DeflateMethod = ['zlib', '7zip', 'zopfli'] as const;
 
-interface ConvertOpt {
+interface ExportOpt {
     repeat? : number;
     optimize? : boolean;
     minQuality? : number;
@@ -286,7 +286,7 @@ interface ConvertOpt {
     iter? : number;
 }
 
-export const apng = async (lottie : LottieFile, output : string, opt? : ConvertOpt) => {
+export const apng = async (lottie : LottieFile, output : string, opt? : ExportOpt) => {
 
     const builder = new APNGBuilder();
 

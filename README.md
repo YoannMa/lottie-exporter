@@ -1,4 +1,4 @@
-# Lottie Converter
+# Lottie Exporter
 
 Convert Lottie animations (.lottie or .json) to animated WebP, GIF, APNG, or a sequence of images
 

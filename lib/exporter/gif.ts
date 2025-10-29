@@ -10,7 +10,7 @@ import sharp                                  from 'sharp';
 import { defaultArgs, LottieFile }            from '../lottie';
 import { outputFile, integer, range, repeat } from '../utils';
 
-interface ConvertOpt {
+interface ExportOpt {
     repeat? : number;
     quality? : number;
     optimize? : boolean;
@@ -19,7 +19,7 @@ interface ConvertOpt {
     dither? : number;
 }
 
-export const gif = async (lottie : LottieFile, output : string, opt? : ConvertOpt) => {
+export const gif = async (lottie : LottieFile, output : string, opt? : ExportOpt) => {
 
     const builder = new GIFEncoder();
 
