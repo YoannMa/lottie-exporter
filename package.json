@@ -7,9 +7,10 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "lottie-converter": "./bin/cli.ts"
+    "lottie-exporter": "./dist/cli.js"
   },
   "scripts": {
+    "build": "tsc",
     "test": "tsc --noEmit"
   },
   "dependencies": {
