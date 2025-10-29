@@ -14,10 +14,10 @@
     "test": "tsc --noEmit"
   },
   "dependencies": {
-    "@lottiefiles/dotlottie-web": "0.54.1",
-    "@napi-rs/canvas": "0.1.80",
+    "@lottiefiles/dotlottie-web": "0.55.0",
+    "@napi-rs/canvas": "0.1.81",
     "apng-optimizer": "1.2.0",
-    "cmd-ts": "0.14.2",
+    "cmd-ts": "0.14.3",
     "gifenc": "1.0.3",
     "node-webpmux": "3.2.1",
     "ora": "9.0.0",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/gif-encoder": "0.7.4",
     "@types/mime-db": "1.43.6",
-    "@types/node": "24.7.2",
+    "@types/node": "24.9.2",
     "typescript": "5.9.3"
   }
 }
