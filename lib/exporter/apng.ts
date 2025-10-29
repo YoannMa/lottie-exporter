@@ -13,7 +13,7 @@ import { outputFile, integer, range, repeat } from '../utils';
  *  APNGBuilder
  *   Copyright 2019 by g200kg (http://www.g200kg.com/)
  *
- *  APNGBuilder is a JS library for build APNG (Animation PNG) from PNG files.
+ *  APNGBuilder is a JS library to build APNG (Animation PNG) from PNG files.
  *	Released under the MIT License
  * */
 class APNGBuilder {
@@ -358,7 +358,7 @@ export const command = cmd.command({
         }),
         deflateMethod : cmd.option({
             long        : 'deflate-method',
-            description : 'Deflate method to use (default: 7zip)',
+            description : `Deflate method to use (default: 7zip) (one of: ${ DeflateMethod.join(', ') })`,
             type        : cmd.optional(cmd.oneOf(DeflateMethod))
         })
     },

@@ -89,7 +89,7 @@ export const command = cmd.command({
         }),
         preset         : cmd.option({
             long        : 'preset',
-            description : 'Named preset for preprocessing/filtering',
+            description : `Named preset for preprocessing/filtering (default: default) (one of: ${ Preset.join(', ') })`,
             type        : cmd.optional(cmd.oneOf(Preset))
         }),
         effort         : cmd.option({

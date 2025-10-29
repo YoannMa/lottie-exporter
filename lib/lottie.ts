@@ -15,7 +15,7 @@ export const defaultArgs = {
     background  : cmd.option({ type : cmd.optional(cmd.string), long : 'background', description : 'Background in HEX(A) (ex: #FEFEFE0F) format (default: none)' }),
     fps         : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'max-fps', description : 'Max FPS of the output (default: 60)' }),
     speed       : cmd.option({ type : cmd.optional(range(cmd.number, { over : 0 })), long : 'speed', description : 'Speed of the animation (default: 1)' }),
-    animationId : cmd.option({ type : cmd.optional(cmd.string), long : 'animation-id', description : 'Animation ID (for .lottie files with multiple animations)' }),
+    animationId : cmd.option({ type : cmd.optional(cmd.string), long : 'animation-id', description : 'Animation ID (for lottie files with multiple animations)' }),
     themeId     : cmd.option({ type : cmd.optional(cmd.string), long : 'theme-id', description : 'Theme ID to apply' })
 } as const;
 

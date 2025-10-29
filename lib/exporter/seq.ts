@@ -39,7 +39,7 @@ export const command = cmd.command({
         output : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'Folder to output the sequence of images to' }),
         type   : cmd.option({
             long        : 'type',
-            description : 'Image type (default: png)',
+            description : `Image type (default: png) (one of: ${ ImageType.join(', ') })`,
             type        : cmd.optional(cmd.oneOf(ImageType))
         })
     },
