@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/YoannMa/lottie-exporter/compare/v1.0.4...v1.0.5) (2025-10-29)
+
+
+### Bug Fixes
+
+* gifenc being CJS causing import issue ([67c91e4](https://github.com/YoannMa/lottie-exporter/commit/67c91e498893a5ad5c295c7e3459bc78db588995))
+
 ## [1.0.4](https://github.com/YoannMa/lottie-exporter/compare/v1.0.3...v1.0.4) (2025-10-29)
 
 
