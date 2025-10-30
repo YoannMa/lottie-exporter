@@ -137,6 +137,3 @@ FLAGS:
 ## Tests
 - No runtime tests are present.
 - Type checks can be run with: `bun run test`
-
-## License
-This project is licensed under the ISC License. See LICENSE for details.
