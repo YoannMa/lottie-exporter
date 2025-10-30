@@ -21,6 +21,7 @@
     "test": "tsc --noEmit"
   },
   "dependencies": {
+    "@inquirer/confirm": "5.1.19",
     "@lottiefiles/dotlottie-web": "0.55.0",
     "@napi-rs/canvas": "0.1.81",
     "apng-optimizer": "1.2.0",

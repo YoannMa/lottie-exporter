@@ -2,22 +2,40 @@ import * as FsP  from 'node:fs/promises';
 import * as Path from 'node:path';
 
 import * as cmd from 'cmd-ts';
+import confirm  from '@inquirer/confirm';
 
 export const outputFile = cmd.extendType(cmd.string, {
     async from(branch) {
 
-        const absolute = Path.relative((process.cwd()), branch);
+        const absolute = Path.resolve(process.cwd(), branch);
+        const folder   = Path.dirname(absolute);
+
+        try {
+
+            await FsP.access(folder, FsP.constants.W_OK);
+        }
+        catch (error) {
+
+            throw new Error(`Folder ${ folder } does not exist or is not writable`, { cause : error });
+        }
 
         try {
 
             await FsP.access(absolute, FsP.constants.W_OK);
 
-            return absolute;
-        }
-        catch {
+            const answer = await confirm({ message: `File ${ absolute } already exists, overwrite` });
 
-            throw new Error(`File ${ absolute } does not exist or is not writable`);
+            if (!answer) {
+
+                process.exit(0);
+            }
         }
+        catch (error) {
+
+            throw new Error(`File ${ folder } does not exist or is not writable`, { cause : error });
+        }
+
+        return absolute;
     }
 });
 
