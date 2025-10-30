@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import pkg from '../package.json' with { type: 'json' };
 
