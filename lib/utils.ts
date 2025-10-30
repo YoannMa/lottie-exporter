@@ -21,19 +21,16 @@ export const outputFile = cmd.extendType(cmd.string, {
 
         try {
 
-            await FsP.access(absolute, FsP.constants.W_OK);
+            await FsP.access(absolute, FsP.constants.F_OK);
 
             const answer = await confirm({ message: `File ${ absolute } already exists, overwrite` });
 
             if (!answer) {
 
+                console.log('Aborted');
                 process.exit(0);
             }
-        }
-        catch (error) {
-
-            throw new Error(`File ${ folder } does not exist or is not writable`, { cause : error });
-        }
+        } catch {}
 
         return absolute;
     }
