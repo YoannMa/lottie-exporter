@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/YoannMa/lottie-exporter/compare/v1.1.0...v1.1.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* do not fail when file does not exist ([d53486f](https://github.com/YoannMa/lottie-exporter/commit/d53486f9d606da32097171f8f9f209e27782bd56))
+
 # [1.1.0](https://github.com/YoannMa/lottie-exporter/compare/v1.0.5...v1.1.0) (2025-10-30)
 
 
