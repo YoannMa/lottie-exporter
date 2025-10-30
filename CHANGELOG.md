@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/YoannMa/lottie-exporter/compare/v1.1.1...v1.1.2) (2025-10-30)
+
+
+### Bug Fixes
+
+* revert a change regarding import of gifenc ([ad6b42f](https://github.com/YoannMa/lottie-exporter/commit/ad6b42f00e8366d4f1f4421e27df7f30f6396864))
+
 ## [1.1.1](https://github.com/YoannMa/lottie-exporter/compare/v1.1.0...v1.1.1) (2025-10-30)
 
 
