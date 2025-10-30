@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/YoannMa/lottie-exporter/compare/v1.0.5...v1.1.0) (2025-10-30)
+
+
+### Bug Fixes
+
+* bun shebang instead of nodejs ([94e2685](https://github.com/YoannMa/lottie-exporter/commit/94e268507301622678ccd5936966a3fa47b4eadf))
+
+
+### Features
+
+* add confirmation before overriding output ([99278bb](https://github.com/YoannMa/lottie-exporter/commit/99278bbf76835c8bbd2ec5d5c243cccbed989b2e))
+
 ## [1.0.5](https://github.com/YoannMa/lottie-exporter/compare/v1.0.4...v1.0.5) (2025-10-29)
 
 
