@@ -1,13 +1,9 @@
-import * as FsP from 'node:fs/promises';
-
 import * as cmd from 'cmd-ts';
-import ora      from 'ora';
 
-// @ts-expect-error
-import { APNGOptimizer } from 'apng-optimizer';
+import { integer, range, repeat } from '../utils.js';
 
-import { LottieFile, defaultArgs }            from '../lottie.js';
-import { outputFile, integer, range, repeat } from '../utils.js';
+import type { Renderer }        from '../struct/renderer.js';
+import type { ExporterOptions } from '../struct/exporter.js';
 
 /* *
  *  APNGBuilder
@@ -276,7 +272,8 @@ class APNGBuilder {
 
 const DeflateMethod = ['zlib', '7zip', 'zopfli'] as const;
 
-interface ExportOpt {
+export interface APNGExporterOptions extends ExporterOptions {
+    output : string;
     repeat? : number;
     optimize? : boolean;
     minQuality? : number;
@@ -286,86 +283,82 @@ interface ExportOpt {
     iter? : number;
 }
 
-export const apng = async (lottie : LottieFile, output : string, opt? : ExportOpt) => {
+export const APNGExporter = {
 
-    const builder = new APNGBuilder();
-
-    builder.setDelay(1, Math.round(lottie.fps));
-
-    if (opt?.repeat) {
-        builder.setNumPlays(opt.repeat);
-    }
-
-    for (const frame of lottie.frames('png')) {
-
-        builder.addFrame(frame);
-    }
-
-    if (opt?.optimize) {
-
-        const spinner = ora('Optimizing APNG...').start();
-
-        const optimizer = await APNGOptimizer.createOptimizer(import.meta.resolve('apng-optimizer/apng-optimizer.wasm'));
+    async export(renderer : Renderer, opt : APNGExporterOptions) {
 
         if (opt?.deflateMethod && DeflateMethod.indexOf(opt.deflateMethod) == -1) {
 
             throw new Error(`Invalid deflate method: ${ opt.deflateMethod }`);
         }
 
-        const optimized = optimizer.optAPNG(builder.getAPng(), {
-            iter            : opt?.iter ?? 15,
-            minQuality      : opt?.minQuality ?? 0,
-            maxQuality      : opt?.maxQuality ?? 100,
-            disabledQuant   : opt?.disabledQuant ?? false,
-            deflateMethod   : opt?.deflateMethod ? DeflateMethod.indexOf(opt.deflateMethod) : 1,
-            processCallback : (progress : number) => {
+        const builder = new APNGBuilder();
 
-                spinner.text = `Optimizing APNG: ${ (progress * 100).toFixed(2) }%`;
-                spinner.render();
-            }
-        });
+        builder.setDelay(1, Math.round(renderer.framerate));
 
-        spinner.succeed('APNG optimized');
+        if (opt?.repeat) {
+            builder.setNumPlays(opt.repeat);
+        }
 
-        await FsP.writeFile(output, optimized);
-        return;
+        for (const { data } of renderer.frames('png')) {
+
+            builder.addFrame(data);
+        }
+
+        let buffer = builder.getAPng();
+
+        if (opt?.optimize) {
+
+            const original = buffer.length;
+
+            // @ts-expect-error
+            const { APNGOptimizer } = await import('apng-optimizer');
+
+            opt.hooks?.beforeOptimize?.({ size : original });
+
+            const optimizer = await APNGOptimizer.createOptimizer(import.meta.resolve('apng-optimizer/apng-optimizer.wasm'));
+
+            buffer = optimizer.optAPNG(buffer, {
+                iter            : opt?.iter ?? 15,
+                minQuality      : opt?.minQuality ?? 0,
+                maxQuality      : opt?.maxQuality ?? 100,
+                disabledQuant   : opt?.disabledQuant ?? false,
+                deflateMethod   : opt?.deflateMethod ? DeflateMethod.indexOf(opt.deflateMethod) : 1,
+                processCallback : (progress : number) => {
+
+                    opt.hooks?.onOptimizeProgress?.({ progress, size : original });
+                }
+            });
+
+            opt.hooks?.afterOptimize?.({ size : buffer.length, original });
+        }
+
+        await Bun.write(opt.output, buffer);
     }
-
-    await FsP.writeFile(output, builder.getAPng());
 };
 
-export const command = cmd.command({
-    name    : 'apng',
-    args    : {
-        ...defaultArgs, repeat,
-        output        : cmd.option({ type : outputFile, long : 'output', short : 'o', description : 'File to output the APNG to' }),
-        optimize      : cmd.flag({ long : 'optimize', description : 'Optimize the output APNG (slow) (default: false)' }),
-        disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' }),
-        iter          : cmd.option({
-            long        : 'iter',
-            description : 'Number of compression iterations, integer (default: 15)',
-            type        : cmd.optional(range(integer, { min : 1 }))
-        }),
-        minQuality    : cmd.option({
-            long        : 'min-quality',
-            description : 'Minimum quality for optimization, integer (0-100) (default: 0)',
-            type        : cmd.optional(range(integer, { min : 0, max : 100 }))
-        }),
-        maxQuality    : cmd.option({
-            long        : 'max-quality',
-            description : 'Maximum quality for optimization, integer (0-100) (default: 100)',
-            type        : cmd.optional(range(integer, { min : 0, max : 100 }))
-        }),
-        deflateMethod : cmd.option({
-            long        : 'deflate-method',
-            description : `Deflate method to use (default: 7zip) (one of: ${ DeflateMethod.join(', ') })`,
-            type        : cmd.optional(cmd.oneOf(DeflateMethod))
-        })
-    },
-    handler : async (args) => {
-
-        const lottie = await LottieFile.fromArgs(args);
-
-        await apng(lottie, args.output, args);
-    }
-});
+export const apngExporterCliArgs = {
+    repeat,
+    optimize      : cmd.flag({ long : 'optimize', description : 'Optimize the output APNG (slow) (default: false)' }),
+    disabledQuant : cmd.flag({ long : 'disabled-quant', description : 'Disable quantization (default: false)' }),
+    iter          : cmd.option({
+        long        : 'iter',
+        description : 'Number of compression iterations, integer (default: 15)',
+        type        : cmd.optional(range(integer, { min : 1 }))
+    }),
+    minQuality    : cmd.option({
+        long        : 'min-quality',
+        description : 'Minimum quality for optimization, integer (0-100) (default: 0)',
+        type        : cmd.optional(range(integer, { min : 0, max : 100 }))
+    }),
+    maxQuality    : cmd.option({
+        long        : 'max-quality',
+        description : 'Maximum quality for optimization, integer (0-100) (default: 100)',
+        type        : cmd.optional(range(integer, { min : 0, max : 100 }))
+    }),
+    deflateMethod : cmd.option({
+        long        : 'deflate-method',
+        description : `Deflate method to use (default: 7zip) (one of: ${ DeflateMethod.join(', ') })`,
+        type        : cmd.optional(cmd.oneOf(DeflateMethod))
+    })
+} as const;

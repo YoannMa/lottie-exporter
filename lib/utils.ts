@@ -1,40 +1,4 @@
-import * as FsP  from 'node:fs/promises';
-import * as Path from 'node:path';
-
 import * as cmd from 'cmd-ts';
-import confirm  from '@inquirer/confirm';
-
-export const outputFile = cmd.extendType(cmd.string, {
-    async from(branch) {
-
-        const absolute = Path.resolve(process.cwd(), branch);
-        const folder   = Path.dirname(absolute);
-
-        try {
-
-            await FsP.access(folder, FsP.constants.W_OK);
-        }
-        catch (error) {
-
-            throw new Error(`Folder ${ folder } does not exist or is not writable`, { cause : error });
-        }
-
-        try {
-
-            await FsP.access(absolute, FsP.constants.F_OK);
-
-            const answer = await confirm({ message: `File ${ absolute } already exists, overwrite` });
-
-            if (!answer) {
-
-                console.log('Aborted');
-                process.exit(0);
-            }
-        } catch {}
-
-        return absolute;
-    }
-});
 
 export const integer = cmd.extendType(cmd.number, {
     async from(branch) {
@@ -83,6 +47,8 @@ export const repeat = cmd.option({
     type        : cmd.optional(range(integer, { min : 0 })),
     description : 'Number of times to repeat the animation, integer (0 = infinite) (default: 0)'
 });
+
+export const output = (description : string) => cmd.option({ type : cmd.string, long : 'output', short : 'o', description });
 
 export const roundToDecimal = (num : number, decimal : number) => Math.round(num * 10 ** decimal) / 10 ** decimal;
 
